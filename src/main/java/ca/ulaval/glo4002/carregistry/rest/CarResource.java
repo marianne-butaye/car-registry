@@ -18,17 +18,17 @@ import ca.ulaval.glo4002.carregistry.services.dto.CarCreationRequest;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class CarResource {
-	
-	private RegistryService registry;
 
-	public CarResource() {
-		registry = new RegistryService();
-	}
-	
-	@POST
-	public Response createCar(@PathParam("ownerId") int ownerId, CarCreationRequest request) {
-		Car car = registry.addCar(ownerId, request);
-		return Response.created(URI.create("/owners/" + ownerId  + "/cars/" + car.getId())).build();
-	}
+  private RegistryService registry;
+
+  public CarResource(RegistryService registryService) {
+    registry = registryService;
+  }
+
+  @POST
+  public Response createCar(@PathParam("ownerId") int ownerId, CarCreationRequest request) {
+    Car car = registry.addCar(ownerId, request);
+    return Response.created(URI.create("/owners/" + ownerId + "/cars/" + car.getId())).build();
+  }
 
 }

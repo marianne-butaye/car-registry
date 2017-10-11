@@ -8,36 +8,35 @@ import ca.ulaval.glo4002.carregistry.domain.Car;
 import ca.ulaval.glo4002.carregistry.domain.CarFactory;
 import ca.ulaval.glo4002.carregistry.domain.CarOwner;
 import ca.ulaval.glo4002.carregistry.domain.CarRegistry;
-import ca.ulaval.glo4002.carregistry.persistence.InMemoryCarRegistry;
 import ca.ulaval.glo4002.carregistry.services.dto.CarCreationRequest;
 import ca.ulaval.glo4002.carregistry.services.dto.CarOwnerDto;
 
 public class RegistryService {
 
-	private CarRegistry carRegistry;
-	private CarFactory carFactory;
-	private CarOwnerAssember carOwnerAssember;
+  private CarRegistry carRegistry;
+  private CarFactory carFactory;
+  private CarOwnerAssember carOwnerAssember;
 
-	public RegistryService() {
-		this.carRegistry = new InMemoryCarRegistry();
-		this.carFactory = new CarFactory();
-		this.carOwnerAssember = new CarOwnerAssember();
-	}
+  public RegistryService(CarRegistry carRegistry) {
+    this.carRegistry = carRegistry;
+    this.carFactory = new CarFactory();
+    this.carOwnerAssember = new CarOwnerAssember();
+  }
 
-	public Car addCar(int ownerId, CarCreationRequest request) {
-		CarOwner owner = this.carRegistry.findOwner(ownerId);
+  public Car addCar(int ownerId, CarCreationRequest request) {
+    CarOwner owner = this.carRegistry.findOwner(ownerId);
 
-		Car car = this.carFactory.createNewCar(request.carPlate);
-		owner.addCar(car);
+    Car car = this.carFactory.createNewCar(request.carPlate);
+    owner.addCar(car);
 
-		carRegistry.update(owner);
-		return car;
+    carRegistry.update(owner);
+    return car;
 
-	}
+  }
 
-	public List<CarOwnerDto> getCarOwners() {
-		Collection<CarOwner> carOwners = this.carRegistry.findAllOwners();
-		return carOwners.stream().map(carOwnerAssember::toDto).collect(Collectors.toList());
-	}
+  public List<CarOwnerDto> getCarOwners() {
+    Collection<CarOwner> carOwners = this.carRegistry.findAllOwners();
+    return carOwners.stream().map(carOwnerAssember::toDto).collect(Collectors.toList());
+  }
 
 }
